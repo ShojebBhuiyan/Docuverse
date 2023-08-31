@@ -1,0 +1,6 @@
+spring.datasource.url=
+spring.datasource.username=
+Spring.datasource.password=
+
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.[your_dialect_name]
+spring.jpa.hibernate.ddl-auto=update
