@@ -6,13 +6,13 @@ import Link  from 'next/link'
 export default function IndexPage() {
   
   return (
-    <div className="flex py-40 justify-center gap-8">
-       <Card className="w-48 h-32 flex items-center justify-center ">
+    <div className="flex py-40 mx-60 my-14 items-center justify-center gap-8 border ">
+       <Card className="w-48 h-12 flex items-center justify-center ">
        <CardTitle>Ask</CardTitle>
        </Card>
-       <Card className="w-48 h-32 flex items-center justify-center ">
+       <Card className="w-48 h-12 flex items-center justify-center ">
        <CardTitle>
-        <Link href="/"> Answer</Link>
+        <Link href="/decks"> Flash Card </Link>
        </CardTitle>
        </Card>
     </div>
