@@ -16,7 +16,7 @@ async function getData() {
 const page = async () => {
 const data: PostProps[] = await getData();
   return (
-    <div className="grid h-[500px] ml-72 mt-20 mr-14 grid-rows-[repeat(1,100px)] grid-cols-[repeat(1,1fr)] gap-[1em]  auto-rows-[80px] ">
+    <div className="flex flex-wrap flex-col w-[1000px] ml-[325px] mt-[100px] gap-9">
     {data.map((post) => (
         <DeckCard key={post.id} {...post} />
     ))}

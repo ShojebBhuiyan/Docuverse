@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const DeckCard = ({title, id}: PostProps) => {
   return (
-    <Card className="flex border items-center justify-center ">
+    <Card className="flex border items-center justify-center h-20">
        <CardTitle>
         <Link href={`/decks/${id}`}> {title} </Link>
        </CardTitle>
