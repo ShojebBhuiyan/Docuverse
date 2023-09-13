@@ -24,7 +24,7 @@ public class FlashCardController {
         return ResponseEntity.ok(flashCard);
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/all")
     public List<FlashCard> getAllFlashCards() {
         return flashCardRepository.findAll();
     }
