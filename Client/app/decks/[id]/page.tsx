@@ -21,8 +21,6 @@ const page =  () => {
         })
     }, [])
    
-
-
     const handleClickLeft = (e: React.MouseEvent<HTMLButtonElement>) => {
       //e.preventDefault();
       count>0 && setCount(count - 1);
