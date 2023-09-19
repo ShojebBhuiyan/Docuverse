@@ -1,4 +1,4 @@
-package com.docuverse.backend.model;
+package com.docuverse.backend.models;
 
 import com.docuverse.backend.enums.Subscription;
 import jakarta.persistence.*;
@@ -6,13 +6,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
-public class User implements UserDetails, GrantedAuthority {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "userId")
+    private long userId;
     @Column(name = "name")
     private String name;
     @Column(name = "email")
@@ -23,25 +26,36 @@ public class User implements UserDetails, GrantedAuthority {
     @Column(name = "subscription")
     private Subscription subscription;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "userId")},
+            inverseJoinColumns = {@JoinColumn(name = "roleId")}
+    )
+    private Set<Role> authorities;
+
 
     public User() {
-
+        super();
+        this.authorities = new HashSet<Role>();
     }
 
-    public User(String name, String email, String password, Subscription subscription) {
+    public User(String name, String email, String password, Subscription subscription, Set<Role> authorities) {
+        super();
         this.name = name;
         this.email = email;
         this.password = password;
         this.subscription = subscription;
+        this.authorities = authorities;
 //        this.thread = thread;
     }
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return this.userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long id) {
+        this.userId = id;
     }
 
     public String getName() {
@@ -62,16 +76,25 @@ public class User implements UserDetails, GrantedAuthority {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.name;
+    }
+
+    public void setUsername(String username) {
+        this.name = username;
     }
 
     @Override
@@ -81,30 +104,21 @@ public class User implements UserDetails, GrantedAuthority {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public String getAuthority() {
-        return this.subscription.toString();
-    }
-
-    public void setAuthority(Subscription authority) {
-        this.subscription = authority;
     }
 
     public String getSubscription() {
