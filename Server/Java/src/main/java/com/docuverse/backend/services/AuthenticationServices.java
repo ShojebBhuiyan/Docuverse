@@ -33,6 +33,7 @@ public class AuthenticationServices {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
+
         User user = new User(username, email, encodedPassword, subscription, authorities);
         return userRepository.save(user);
     }

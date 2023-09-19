@@ -15,8 +15,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public User signUpUser(@RequestBody SignUpDTO body) {
-        return authenticationServices.signUpUser(
-                body.getUsername(), body.getEmail(), body.getPassword()
-        );
+        return authenticationServices.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());
     }
 }

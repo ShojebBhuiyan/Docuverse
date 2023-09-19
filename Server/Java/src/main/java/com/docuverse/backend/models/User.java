@@ -34,7 +34,6 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
-
     public User() {
         super();
         this.authorities = new HashSet<Role>();
@@ -47,7 +46,6 @@ public class User implements UserDetails {
         this.password = password;
         this.subscription = subscription;
         this.authorities = authorities;
-//        this.thread = thread;
     }
 
     public long getUserId() {
@@ -59,7 +57,7 @@ public class User implements UserDetails {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -67,7 +65,7 @@ public class User implements UserDetails {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -85,7 +83,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
@@ -99,7 +97,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
