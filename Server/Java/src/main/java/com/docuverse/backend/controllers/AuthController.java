@@ -1,5 +1,6 @@
 package com.docuverse.backend.controllers;
 
+import com.docuverse.backend.models.SignInResponseDTO;
 import com.docuverse.backend.models.SignUpDTO;
 import com.docuverse.backend.models.User;
 import com.docuverse.backend.services.AuthenticationService;
@@ -16,5 +17,10 @@ public class AuthController {
     @PostMapping("/signup")
     public User signUpUser(@RequestBody SignUpDTO body) {
         return authenticationService.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());
+    }
+
+    @PostMapping("/signin")
+    public SignInResponseDTO signInUser(@RequestBody SignUpDTO body) {
+        return authenticationService.signInUser(body.getUsername(), body.getPassword());
     }
 }
