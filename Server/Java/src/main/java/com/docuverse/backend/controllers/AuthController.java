@@ -2,7 +2,7 @@ package com.docuverse.backend.controllers;
 
 import com.docuverse.backend.models.SignUpDTO;
 import com.docuverse.backend.models.User;
-import com.docuverse.backend.services.AuthenticationServices;
+import com.docuverse.backend.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
     @Autowired
-    private AuthenticationServices authenticationServices;
+    private AuthenticationService authenticationService;
 
     @PostMapping("/signup")
     public User signUpUser(@RequestBody SignUpDTO body) {
-        return authenticationServices.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());
+        return authenticationService.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());
     }
 }

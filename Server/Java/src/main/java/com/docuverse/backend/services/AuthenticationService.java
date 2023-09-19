@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class AuthenticationServices {
+public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
