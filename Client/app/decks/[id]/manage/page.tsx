@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import * as z from "zod"
+
 
 import { CardProps } from "@/types/types"
 import {
@@ -16,6 +18,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
   Table,
   TableBody,
   TableCell,
@@ -23,6 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import DeleteFlashcard from "@/components/deleteFlashcard"
 
 const page = () => {
   const [data, setData] = useState<CardProps[]>()
@@ -64,7 +78,6 @@ const page = () => {
   }
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    console.log("delete")
     deleteUser(id)
   }
 
@@ -88,34 +101,33 @@ const page = () => {
               <TableCell>{post.question}</TableCell>
               <TableCell>{post.answer}</TableCell>
               <TableCell className="flex gap-2">
-                <Button size="sm">Add</Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm">Add</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Add flashcard</DialogTitle>
+                      <DialogDescription>
+                        Add new flashcard here. Click save when
+                        you're done.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <DialogFooter>
+                      <Button type="submit">Save changes</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
                 <Button size="sm">Edit</Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button size="sm" > Delete </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete the flashcard from this deck. 
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={(e) => handleDelete(e, post.id)}>Continue</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <DeleteFlashcard handleDelete={handleDelete} id={post.id}  />
               </TableCell>
             </TableRow>
           </TableBody>
         ))}
       </Table>
     </div>
+
   )
 }
 
