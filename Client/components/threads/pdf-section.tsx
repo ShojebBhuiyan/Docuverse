@@ -9,6 +9,7 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 
 import { ScrollArea } from "../ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import PDFUploadForm from "./pdf-upload-form";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -49,7 +50,8 @@ export default function PDFSection() {
         </TabsList>
         <TabsContent value="title">
           <label htmlFor="file">Load from file:</label>{" "}
-          <input onChange={onFileChange} type="file" />
+          {/* <input onChange={onFileChange} type="file" /> */}
+          <PDFUploadForm parentOnChange={onFileChange} />
           <Document
             file={file}
             onLoadSuccess={onDocumentLoadSuccess}
