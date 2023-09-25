@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @RestController
 @RequestMapping("/api/v1/document")
@@ -32,16 +33,19 @@ public class DocumentController {
     }
 
 
+    @Autowired
+    ThreadPoolExecutor threadPoolExecutor;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPDFs(@RequestParam("files") MultipartFile[] pdfFiles) {
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+//        ExecutorService executorService = Executors.newFixedThreadPool(2);
         System.out.println("STARTED");
         //EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
         for (MultipartFile pdfFile : pdfFiles) {
-            executorService.submit(() -> {
+            threadPoolExecutor.submit(() -> {
                 try {
-                    System.out.println("Thread: " + executorService.toString());
+                    System.out.println("Thread: " + Thread.currentThread().getName());
                     String text = documentService.extractTextFromPDF(pdfFile);
                     Metadata metadata = documentService.createMetadataFromMultipartFile(pdfFile);
                     Document document = new Document(text,metadata);
@@ -55,7 +59,7 @@ public class DocumentController {
             });
         }
 
-        executorService.shutdown();
+//        threadPoolExecutor.shutdown();
 
         return ResponseEntity.ok("Upload successful");
     }
