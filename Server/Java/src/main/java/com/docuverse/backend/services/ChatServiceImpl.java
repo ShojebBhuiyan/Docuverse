@@ -6,6 +6,7 @@ import dev.langchain4j.chain.ConversationalRetrievalChain;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.UrlDocumentLoader;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.message.AiMessage;
@@ -56,8 +57,27 @@ public class ChatServiceImpl implements ChatService {
         Dotenv dotenv = Dotenv.load();
 
         // Load Documents
-        Path directoryPath = toPath("example-files");
-        List<Document> documents = FileSystemDocumentLoader.loadDocuments(directoryPath);
+        System.out.println("checkpoint1");
+
+        // Define your list of URLs
+        List<String> urls = new ArrayList<>();
+        urls.add("https://www.iutoic-dhaka.edu/uploads/pdf/1677155938_1227.pdf");
+        urls.add("https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf");
+
+        // Initialize the documents list
+        List<Document> documents = new ArrayList<>();
+
+        // Iterate through the URLs and load each URL into a Document object
+        for (String url : urls) {
+            Document document = UrlDocumentLoader.load(url);
+            //System.out.println(document.text());
+            documents.add(document);
+        }
+
+
+
+//        Path directoryPath = toPath("example-files");
+//        List<Document> documents = FileSystemDocumentLoader.loadDocuments(directoryPath);
 
         // Split documents into segments 100 tokens each
         DocumentSplitter splitter = DocumentSplitters.recursive(100, new OpenAiTokenizer(GPT_3_5_TURBO));
@@ -79,7 +99,10 @@ public class ChatServiceImpl implements ChatService {
                 .logResponses(false)
                 .build();
 
+
         List<Embedding> embeddings = embeddingModel.embedAll(segments);
+        System.out.println("checkpoint 2");
+        //System.out.println(embeddings);
 
         // Store embeddings into an embedding store for further search / retrieval
         EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
@@ -87,23 +110,26 @@ public class ChatServiceImpl implements ChatService {
 
         // Create a prompt template
         PromptTemplate promptTemplate = PromptTemplate.from(
-                "Answer the following question to the best of your ability:\n"
+                "Answer the question as truthfully as possible using the information below, and if the answer is not within the information, say 'I don't know.\n"
                         + "\n"
                         + "Question:\n"
                         + "{{question}}\n"
                         + "\n"
-                        + "Base your answer on the following information:\n"
+                        + "Information:\n"
                         + "{{information}}");
+
+        System.out.println("checkpoint 3");
+
 
         // Send the prompt to the OpenAI chat model
         ChatLanguageModel chatModel = OpenAiChatModel.builder()
                 .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName("GPT_3_5_TURBO")
+                .modelName(GPT_3_5_TURBO)
                 .temperature(0.7)
                 .timeout(ofSeconds(15))
                 .maxRetries(3)
-                .logResponses(false)
-                .logRequests(false)
+                .logResponses(true)
+                .logRequests(true)
                 .build();
 
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
@@ -119,12 +145,16 @@ public class ChatServiceImpl implements ChatService {
                 .build();
 
         String answer = chain.execute(request.getQuestion());
+        System.out.println(chatMemory.messages());
         return answer;
     }
 
     private static Path toPath(String fileName) {
         try {
+            System.out.println("filename: " + fileName);
             URL fileUrl = ChatServiceImpl.class.getResource(fileName);
+            System.out.println(fileUrl);
+
             return Paths.get(fileUrl.toURI());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
