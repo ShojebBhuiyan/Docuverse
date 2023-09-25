@@ -52,11 +52,15 @@ export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
         formData.append(`files`, values.files[i]);
       }
 
-      const response = await axios.post("/api/pdf-upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/document/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log("Response from the backend:", response.data);
     } catch (error) {
       console.log(error);
