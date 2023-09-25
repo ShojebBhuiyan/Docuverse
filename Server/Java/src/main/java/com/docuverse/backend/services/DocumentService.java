@@ -15,7 +15,7 @@ public class DocumentService {
     public String extractTextFromPDF(MultipartFile pdfFile) throws IOException {
         System.out.println("Inside service");
         try (InputStream is = pdfFile.getInputStream();
-             PDDocument document = Loader.loadPDF(is.readAllBytes());) {
+                PDDocument document = Loader.loadPDF(is.readAllBytes());) {
 
             PDFTextStripper stripper = new PDFTextStripper();
             String text = stripper.getText(document);
