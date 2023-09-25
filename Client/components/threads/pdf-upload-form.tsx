@@ -47,14 +47,9 @@ export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
   async function onSubmit(values: z.infer<typeof pdfUploadFormSchema>) {
     try {
       const formData = new FormData();
-      // formData.append("files", values.files);
-      // console.log("Form data: " + formData);
-      // values.files.forEach((file) => {
-      //   formData.append("files", file);
-      // });
 
       for (let i = 0; i < values.files.length; i++) {
-        formData.append(`file${i}`, values.files[i]);
+        formData.append(`files`, values.files[i]);
       }
 
       const response = await axios.post("/api/pdf-upload", formData, {
