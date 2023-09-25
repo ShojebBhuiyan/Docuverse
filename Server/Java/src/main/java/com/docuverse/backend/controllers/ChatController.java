@@ -17,7 +17,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/chat")
+    @PostMapping("api/v1/chat")
     public String chat(@RequestBody ChatRequest request) {
         try {
             // Process the chat request using the ChatService
