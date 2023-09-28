@@ -56,41 +56,6 @@ public class ChatServiceImpl implements ChatService {
 
         Dotenv dotenv = Dotenv.load();
 
-        // Load Documents
-        System.out.println("checkpoint1");
-
-        // Define your list of URLs
-        List<String> urls = new ArrayList<>();
-        urls.add("https://www.iutoic-dhaka.edu/uploads/pdf/1677155938_1227.pdf");
-        urls.add("https://inst.eecs.berkeley.edu/~cs188/fa22/assets/notes/cs188-fa22-note02.pdf");
-
-        // Initialize the documents list
-        List<Document> documents = new ArrayList<>();
-
-        // Iterate through the URLs and load each URL into a Document object
-        for (String url : urls) {
-            Document document = UrlDocumentLoader.load(url);
-            System.out.println(document.metadata());
-            documents.add(document);
-        }
-
-
-
-//        Path directoryPath = toPath("example-files");
-//        List<Document> documents = FileSystemDocumentLoader.loadDocuments(directoryPath);
-
-        // Split documents into segments 100 tokens each
-        DocumentSplitter splitter = DocumentSplitters.recursive(100, new OpenAiTokenizer(GPT_3_5_TURBO));
-        List<TextSegment> segments = new ArrayList<>();
-
-        for (Document doc : documents) {
-            // Split each document into segments
-            List<TextSegment> docSegments = splitter.split(doc);
-
-            // Add the segments of this document to the main list
-            segments.addAll(docSegments);
-        }
-
         EmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
                 .apiKey(dotenv.get("OPENAI_API_KEY"))
                 .modelName(TEXT_EMBEDDING_ADA_002)
@@ -99,14 +64,7 @@ public class ChatServiceImpl implements ChatService {
                 .logResponses(false)
                 .build();
 
-
-        List<Embedding> embeddings = embeddingModel.embedAll(segments);
-        System.out.println("checkpoint 2");
-        //System.out.println(embeddings);
-
-        // Store embeddings into an embedding store for further search / retrieval
         EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
-        embeddingStore.addAll(embeddings, segments);
 
         // Create a prompt template
         PromptTemplate promptTemplate = PromptTemplate.from(
