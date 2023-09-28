@@ -70,7 +70,7 @@ public class ChatServiceImpl implements ChatService {
         // Iterate through the URLs and load each URL into a Document object
         for (String url : urls) {
             Document document = UrlDocumentLoader.load(url);
-            //System.out.println(document.text());
+            System.out.println(document.metadata());
             documents.add(document);
         }
 
