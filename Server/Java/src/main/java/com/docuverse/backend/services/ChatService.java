@@ -11,6 +11,6 @@ public interface ChatService {
      * @param request The chat request containing user input.
      * @return The response generated based on the chat request.
      */
-    String processChat(ChatRequest request, EmbeddingStore<TextSegment> embeddingStore);
+    String processChat(ChatRequest request);
 }
 

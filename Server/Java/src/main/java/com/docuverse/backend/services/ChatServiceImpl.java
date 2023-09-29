@@ -1,43 +1,24 @@
 package com.docuverse.backend.services;
 
 import com.docuverse.backend.models.ChatRequest;
-import dev.langchain4j.chain.ConversationalChain;
 import dev.langchain4j.chain.ConversationalRetrievalChain;
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.DocumentSplitter;
-import dev.langchain4j.data.document.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.UrlDocumentLoader;
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
-import dev.langchain4j.model.Tokenizer;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.retriever.EmbeddingStoreRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,21 +32,20 @@ import static org.mapdb.Serializer.STRING;
 @Service
 public class ChatServiceImpl implements ChatService {
 
+    private final EmbeddingStore<TextSegment> embeddingStore;
+    private final EmbeddingModel embeddingModel;
+
+    public ChatServiceImpl(EmbeddingStore<TextSegment> embeddingStore, EmbeddingModel embeddingModel) {
+        this.embeddingStore = embeddingStore;
+        this.embeddingModel = embeddingModel;
+    }
+
+
     @Override
-    public String processChat(ChatRequest request,EmbeddingStore<TextSegment> embeddingStore) {
+    public String processChat(ChatRequest request) {
 
         Dotenv dotenv = Dotenv.load();
-
-        EmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
-                .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName(TEXT_EMBEDDING_ADA_002)
-                .timeout(ofSeconds(15))
-                .logRequests(false)
-                .logResponses(false)
-                .build();
-
-        //EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
-
+        
         // Create a prompt template
         PromptTemplate promptTemplate = PromptTemplate.from(
                 "Answer the question as truthfully as possible using the information below, and if the answer is not within the information, say 'I don't know.\n"
