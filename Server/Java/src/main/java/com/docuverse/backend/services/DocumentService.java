@@ -29,9 +29,11 @@ import static java.time.Duration.ofSeconds;
 public class DocumentService {
 
     private final EmbeddingStore<TextSegment> embeddingStore;
+    private final EmbeddingModel embeddingModel;
 
-    public DocumentService(EmbeddingStore<TextSegment> embeddingStore) {
+    public DocumentService(EmbeddingStore<TextSegment> embeddingStore, EmbeddingModel embeddingModel) {
         this.embeddingStore = embeddingStore;
+        this.embeddingModel = embeddingModel;
     }
 
 
@@ -77,13 +79,6 @@ public class DocumentService {
         DocumentSplitter splitter = DocumentSplitters.recursive(100, new OpenAiTokenizer(GPT_3_5_TURBO));
         List<TextSegment> docSegments = splitter.split(document);
 
-        EmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
-                .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName(TEXT_EMBEDDING_ADA_002)
-                .timeout(ofSeconds(15))
-                .logRequests(false)
-                .logResponses(false)
-                .build();
         System.out.println("checkpoint 1");
 
         //Create embeddings
