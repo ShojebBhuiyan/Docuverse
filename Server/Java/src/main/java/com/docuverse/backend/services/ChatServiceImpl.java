@@ -52,7 +52,7 @@ import static org.mapdb.Serializer.STRING;
 public class ChatServiceImpl implements ChatService {
 
     @Override
-    public String processChat(ChatRequest request) {
+    public String processChat(ChatRequest request,EmbeddingStore<TextSegment> embeddingStore) {
 
         Dotenv dotenv = Dotenv.load();
 
@@ -64,7 +64,7 @@ public class ChatServiceImpl implements ChatService {
                 .logResponses(false)
                 .build();
 
-        EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+        //EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
         // Create a prompt template
         PromptTemplate promptTemplate = PromptTemplate.from(

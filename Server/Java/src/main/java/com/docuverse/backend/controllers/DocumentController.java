@@ -21,14 +21,24 @@ import java.util.concurrent.Executors;
 @RequestMapping("/api/v1/document")
 @CrossOrigin(origins = "http://localhost:3000")
 public class DocumentController {
+
+
+    private final DocumentService documentService;
+    private final EmbeddingStore<TextSegment> embeddingStore;
+
     @Autowired
-    DocumentService documentService;
+    public DocumentController(DocumentService documentService,EmbeddingStore<TextSegment> embeddingStore){
+        this.documentService = documentService;
+        this.embeddingStore = embeddingStore;
+    }
+
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPDFs(@RequestParam("files") MultipartFile[] pdfFiles) {
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         System.out.println("STARTED");
-        EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+        //EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+
         for (MultipartFile pdfFile : pdfFiles) {
             executorService.submit(() -> {
                 try {
