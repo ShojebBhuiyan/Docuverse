@@ -107,18 +107,6 @@ public class ChatServiceImpl implements ChatService {
         return answer;
     }
 
-    private static Path toPath(String fileName) {
-        try {
-            System.out.println("filename: " + fileName);
-            URL fileUrl = ChatServiceImpl.class.getResource(fileName);
-            System.out.println(fileUrl);
-
-            return Paths.get(fileUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     static class PersistentChatMemoryStore implements ChatMemoryStore {
 
         private final DB db = DBMaker.fileDB("chat-memory.db").transactionEnable().make();
