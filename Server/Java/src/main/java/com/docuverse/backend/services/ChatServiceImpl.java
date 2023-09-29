@@ -43,7 +43,6 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public String processChat(ChatRequest request) {
-
         Dotenv dotenv = Dotenv.load();
 
         // Create a prompt template
@@ -58,34 +57,84 @@ public class ChatServiceImpl implements ChatService {
 
         System.out.println("checkpoint 3");
 
+        try {
+            // Send the prompt to the OpenAI chat model
+            ChatLanguageModel chatModel = OpenAiChatModel.builder()
+                    .apiKey(dotenv.get("OPENAI_API_KEY"))
+                    .modelName(GPT_3_5_TURBO)
+                    .temperature(0.7)
+                    .timeout(ofSeconds(15))
+                    .maxRetries(3)
+                    .logResponses(true)
+                    .logRequests(true)
+                    .build();
 
-        // Send the prompt to the OpenAI chat model
-        ChatLanguageModel chatModel = OpenAiChatModel.builder()
-                .apiKey(dotenv.get("OPENAI_API_KEY"))
-                .modelName(GPT_3_5_TURBO)
-                .temperature(0.7)
-                .timeout(ofSeconds(15))
-                .maxRetries(3)
-                .logResponses(true)
-                .logRequests(true)
-                .build();
+            ChatMemory chatMemory = MessageWindowChatMemory.builder()
+                    .maxMessages(10)
+                    .chatMemoryStore(new PersistentChatMemoryStore())
+                    .build();
 
-        ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .maxMessages(10)
-                .chatMemoryStore(new PersistentChatMemoryStore())
-                .build();
+            ConversationalRetrievalChain chain = ConversationalRetrievalChain.builder()
+                    .chatLanguageModel(chatModel)
+                    .retriever(EmbeddingStoreRetriever.from(embeddingStore, embeddingModel, 1, 0.9))
+                    .chatMemory(chatMemory) // you can override default chat memory
+                    .promptTemplate(promptTemplate) // you can override default prompt template
+                    .build();
 
-        ConversationalRetrievalChain chain = ConversationalRetrievalChain.builder()
-                .chatLanguageModel(chatModel)
-                .retriever(EmbeddingStoreRetriever.from(embeddingStore, embeddingModel, 1, 0.9))
-                .chatMemory(chatMemory) // you can override default chat memory
-                .promptTemplate(promptTemplate) // you can override default prompt template
-                .build();
-
-        String answer = chain.execute(request.getQuestion());
-        System.out.println(chatMemory.messages());
-        return answer;
+            String answer = chain.execute(request.getQuestion());
+            System.out.println(chatMemory.messages());
+            return answer;
+        } catch (Exception e) {
+            // Handle the exception here, you can log it or return an error message
+            e.printStackTrace(); // Print the exception stack trace for debugging
+            return "An error occurred while processing the request.";
+        }
     }
+
+//    public String processChat(ChatRequest request) {
+//
+//        Dotenv dotenv = Dotenv.load();
+//
+//        // Create a prompt template
+//        PromptTemplate promptTemplate = PromptTemplate.from(
+//                "Answer the question as truthfully as possible using the information below, and if the answer is not within the information, say 'I don't know.\n"
+//                        + "\n"
+//                        + "Question:\n"
+//                        + "{{question}}\n"
+//                        + "\n"
+//                        + "Information:\n"
+//                        + "{{information}}");
+//
+//        System.out.println("checkpoint 3");
+//
+//
+//        // Send the prompt to the OpenAI chat model
+//        ChatLanguageModel chatModel = OpenAiChatModel.builder()
+//                .apiKey(dotenv.get("OPENAI_API_KEY"))
+//                .modelName(GPT_3_5_TURBO)
+//                .temperature(0.7)
+//                .timeout(ofSeconds(15))
+//                .maxRetries(3)
+//                .logResponses(true)
+//                .logRequests(true)
+//                .build();
+//
+//        ChatMemory chatMemory = MessageWindowChatMemory.builder()
+//                .maxMessages(10)
+//                .chatMemoryStore(new PersistentChatMemoryStore())
+//                .build();
+//
+//        ConversationalRetrievalChain chain = ConversationalRetrievalChain.builder()
+//                .chatLanguageModel(chatModel)
+//                .retriever(EmbeddingStoreRetriever.from(embeddingStore, embeddingModel, 1, 0.9))
+//                .chatMemory(chatMemory) // you can override default chat memory
+//                .promptTemplate(promptTemplate) // you can override default prompt template
+//                .build();
+//
+//        String answer = chain.execute(request.getQuestion());
+//        System.out.println(chatMemory.messages());
+//        return answer;
+//    }
 
     static class PersistentChatMemoryStore implements ChatMemoryStore {
 

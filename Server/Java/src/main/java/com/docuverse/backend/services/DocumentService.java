@@ -72,38 +72,85 @@ public class DocumentService {
         return metadata;
     }
 
-    public void documentToEmbedding(Document document){
+//    public void documentToEmbedding(Document document){
+//        Dotenv dotenv = Dotenv.load();
+//
+//        //Splitting document to multiple segments with segment size
+//        DocumentSplitter splitter = DocumentSplitters.recursive(100, new OpenAiTokenizer(GPT_3_5_TURBO));
+//        List<TextSegment> docSegments = splitter.split(document);
+//
+//        System.out.println("checkpoint 1");
+//
+//        //Create embeddings
+//        List<Embedding> embeddings = embeddingModel.embedAll(docSegments);
+//        System.out.println("checkpoint 2");
+//
+//        // Store embeddings into an embedding store for further search / retrieval
+//
+//        //TODO pine cone implementation here
+////        EmbeddingStore<TextSegment> embeddingStore = mypinecone.builder()
+////                .apiKey(dotenv.get("PINECONE_API_KEY"))
+////                .environment(dotenv.get("PINECONE_ENVIRONMENT"))
+////                // Project ID can be found in the Pinecone url:
+////                // https://app.pinecone.io/organizations/{organization}/projects/{environment}:{projectId}/indexes
+////                .projectId(dotenv.get("PINECONE_PROJECTID"))
+////                // Make sure the dimensions of the Pinecone index match the dimensions of the embedding model
+////                // (384 for all-MiniLM-L6-v2, 1536 for text-embedding-ada-002, etc.)
+////                .index(dotenv.get("PINECONE_INDEX"))
+////                .build();
+//
+//        System.out.println("checkpoint 3");
+//
+//        //storing embeddings
+//        embeddingStore.addAll(embeddings, docSegments);
+//
+//        System.out.println("all good");
+//    }
+
+    public void documentToEmbedding(Document document) {
         Dotenv dotenv = Dotenv.load();
 
-        //Splitting document to multiple segments with segment size
+        // Splitting document to multiple segments with segment size
         DocumentSplitter splitter = DocumentSplitters.recursive(100, new OpenAiTokenizer(GPT_3_5_TURBO));
         List<TextSegment> docSegments = splitter.split(document);
 
         System.out.println("checkpoint 1");
 
-        //Create embeddings
-        List<Embedding> embeddings = embeddingModel.embedAll(docSegments);
-        System.out.println("checkpoint 2");
+        // Create embeddings
+        List<Embedding> embeddings = null;
+        try {
+            embeddings = embeddingModel.embedAll(docSegments);
+            System.out.println("checkpoint 2");
 
-        // Store embeddings into an embedding store for further search / retrieval
+            // Store embeddings into an embedding store for further search / retrieval
 
-        //TODO pine cone implementation here
-//        EmbeddingStore<TextSegment> embeddingStore = mypinecone.builder()
-//                .apiKey(dotenv.get("PINECONE_API_KEY"))
-//                .environment(dotenv.get("PINECONE_ENVIRONMENT"))
-//                // Project ID can be found in the Pinecone url:
-//                // https://app.pinecone.io/organizations/{organization}/projects/{environment}:{projectId}/indexes
-//                .projectId(dotenv.get("PINECONE_PROJECTID"))
-//                // Make sure the dimensions of the Pinecone index match the dimensions of the embedding model
-//                // (384 for all-MiniLM-L6-v2, 1536 for text-embedding-ada-002, etc.)
-//                .index(dotenv.get("PINECONE_INDEX"))
-//                .build();
+            // TODO pine cone implementation here
+            // EmbeddingStore<TextSegment> embeddingStore = mypinecone.builder()
+            //     .apiKey(dotenv.get("PINECONE_API_KEY"))
+            //     .environment(dotenv.get("PINECONE_ENVIRONMENT"))
+            //     // Project ID can be found in the Pinecone url:
+            //     // https://app.pinecone.io/organizations/{organization}/projects/{environment}:{projectId}/indexes
+            //     .projectId(dotenv.get("PINECONE_PROJECTID"))
+            //     // Make sure the dimensions of the Pinecone index match the dimensions of the embedding model
+            //     // (384 for all-MiniLM-L6-v2, 1536 for text-embedding-ada-002, etc.)
+            //     .index(dotenv.get("PINECONE_INDEX"))
+            //     .build();
 
-        System.out.println("checkpoint 3");
+            System.out.println("checkpoint 3");
 
-        //storing embeddings
-        embeddingStore.addAll(embeddings, docSegments);
-
-        System.out.println("all good");
+            // Storing embeddings
+            if (embeddingStore != null) {
+                embeddingStore.addAll(embeddings, docSegments);
+                System.out.println("all good");
+            } else {
+                System.err.println("Embedding store is not initialized.");
+            }
+        } catch (Exception e) {
+            // Handle exceptions here
+            e.printStackTrace();
+            System.err.println("An error occurred during embedding generation or storage.");
+        }
     }
+
+
 }
