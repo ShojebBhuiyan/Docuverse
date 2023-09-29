@@ -45,7 +45,7 @@ public class ChatServiceImpl implements ChatService {
     public String processChat(ChatRequest request) {
 
         Dotenv dotenv = Dotenv.load();
-        
+
         // Create a prompt template
         PromptTemplate promptTemplate = PromptTemplate.from(
                 "Answer the question as truthfully as possible using the information below, and if the answer is not within the information, say 'I don't know.\n"

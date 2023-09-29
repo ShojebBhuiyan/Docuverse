@@ -87,7 +87,7 @@ public class DocumentService {
 
         // Store embeddings into an embedding store for further search / retrieval
 
-        //pine cone implementation here
+        //TODO pine cone implementation here
 //        EmbeddingStore<TextSegment> embeddingStore = mypinecone.builder()
 //                .apiKey(dotenv.get("PINECONE_API_KEY"))
 //                .environment(dotenv.get("PINECONE_ENVIRONMENT"))
