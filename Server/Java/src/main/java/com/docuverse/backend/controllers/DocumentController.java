@@ -24,12 +24,11 @@ public class DocumentController {
 
 
     private final DocumentService documentService;
-    private final EmbeddingStore<TextSegment> embeddingStore;
+
 
     @Autowired
-    public DocumentController(DocumentService documentService,EmbeddingStore<TextSegment> embeddingStore){
+    public DocumentController(DocumentService documentService){
         this.documentService = documentService;
-        this.embeddingStore = embeddingStore;
     }
 
 
@@ -48,7 +47,7 @@ public class DocumentController {
                     Document document = new Document(text,metadata);
                     System.out.println("Checkpoint document");
                     // Process or store the extracted text as needed.
-                    documentService.documentToEmbedding(document,embeddingStore);
+                    documentService.documentToEmbedding(document);
 
                 } catch (IOException e) {
                     // Handle exceptions appropriately.

@@ -27,6 +27,14 @@ import static java.time.Duration.ofSeconds;
 
 @Service
 public class DocumentService {
+
+    private final EmbeddingStore<TextSegment> embeddingStore;
+
+    public DocumentService(EmbeddingStore<TextSegment> embeddingStore) {
+        this.embeddingStore = embeddingStore;
+    }
+
+
     public String extractTextFromPDF(MultipartFile pdfFile) throws IOException {
         System.out.println("Inside service");
         try (InputStream is = pdfFile.getInputStream();
@@ -62,7 +70,7 @@ public class DocumentService {
         return metadata;
     }
 
-    public void documentToEmbedding(Document document,EmbeddingStore<TextSegment> embeddingStore){
+    public void documentToEmbedding(Document document){
         Dotenv dotenv = Dotenv.load();
 
         //Splitting document to multiple segments with segment size
