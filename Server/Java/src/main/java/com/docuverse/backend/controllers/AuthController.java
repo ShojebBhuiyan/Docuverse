@@ -5,6 +5,7 @@ import com.docuverse.backend.models.SignUpDTO;
 import com.docuverse.backend.models.User;
 import com.docuverse.backend.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
