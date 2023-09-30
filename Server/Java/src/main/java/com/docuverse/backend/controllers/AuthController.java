@@ -15,6 +15,12 @@ public class AuthController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @PostMapping("/lookup")
+    public ResponseEntity<Boolean> lookupUser(@RequestBody String email) {
+        boolean userExists = authenticationService.lookupUser(email);
+        return ResponseEntity.ok(userExists);
+    }
+
     @PostMapping("/signup")
     public User signUpUser(@RequestBody SignUpDTO body) {
         return authenticationService.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());

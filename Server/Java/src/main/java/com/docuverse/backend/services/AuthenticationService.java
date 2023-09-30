@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -35,6 +36,11 @@ public class AuthenticationService {
 
     @Autowired
     private TokenService tokenService;
+
+    public boolean lookupUser(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent();
+    }
 
     public User signUpUser(String username, String email, String password) {
         String encodedPassword = passwordEncoder.encode(password);
