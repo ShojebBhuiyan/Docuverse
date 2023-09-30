@@ -31,39 +31,41 @@ export default function SignInForm() {
   const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof signinFormSchema>) {
-    try {
-      const result = await fetch("http:localhost:8080/api/v1/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        }),
-      });
-      if (result.status === 200) {
+    await fetch("http://localhost:8080/api/v1/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    }).then(async (res) => {
+      if (res.status === 200) {
         toast({
           variant: "default",
           description: "Login successful!",
         });
-
-        const data = await result.json();
+        const data = await res.json();
         setAuthToken(data.token);
         router.replace("/dashboard");
-      } else {
+      } else if (res.status === 400) {
         toast({
           variant: "destructive",
           description: "Invalid credentials",
         });
+      } else if (res.status === 404) {
+        toast({
+          variant: "warning",
+          description: "User not found!",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Something went wrong",
+        });
       }
-    } catch (error) {
-      console.log(error);
-      toast({
-        variant: "destructive",
-        description: "Something went wrong",
-      });
-    }
+    });
   }
 
   return (
