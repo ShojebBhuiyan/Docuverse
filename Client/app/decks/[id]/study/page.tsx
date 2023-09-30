@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-
 import { CardProps } from "@/types/types"
 import { Button } from "@/components/ui/button"
 
@@ -41,6 +40,11 @@ const page = () => {
   return (
     <div className="flex mx-16 my-16">
       <div className="flex flex-col  w-[1000px] h-[400px] items-end [perspective:1000px] gap-2  ">
+        {front ? (
+          <div className="text-xl">Question</div>
+        ) : (
+          <div className="text-xl">Answer</div>
+        )}
         <div
           className={`relative border h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] ${
             front ? "" : "[transform:rotateY(180deg)]"
@@ -48,26 +52,14 @@ const page = () => {
         >
           {front ? (
             <div className="flex items-center justify-center absolute inset-0 rounded-xl px-12  [backface-visibility:hidden] ">
-              <div className="">
-              {data?.[count]?.question}
-              </div>
+              <div className="">{data?.[count]?.question}</div>
             </div>
           ) : (
             <div className="absolute flex items-center justify-center inset-0 rounded-xl px-12 [transform:rotateY(180deg)] [backface-visibility:hidden]">
-              <div>
-              {data?.[count]?.answer}
-              </div>
+              <div>{data?.[count]?.answer}</div>
             </div>
           )}
         </div>
-        {/* <h1>
-          Deck {id} : {count}
-        </h1> */}
-        {/* <h1 className="">{front ? "Question" : "Answer"}</h1> */}
-        {/* <div className="flex w-full h-[350px] items-center ">
-          This is the front of the card and nothing can be done in this era plus this will be in your job to do that
-          {front ? data?.[count]?.question : data?.[count]?.answer}
-          </div> */}
         <Button className="" onClick={handleCard} variant="default" size="lg">
           Flip Card
         </Button>
