@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { setAuthToken } from "@/config/tokens";
+
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
@@ -45,7 +47,10 @@ export default function SignInForm() {
           variant: "default",
           description: "Login successful!",
         });
-        // router.replace("/guided-form");
+
+        const data = await result.json();
+        setAuthToken(data.token);
+        router.replace("/dashboard");
       } else {
         toast({
           variant: "destructive",

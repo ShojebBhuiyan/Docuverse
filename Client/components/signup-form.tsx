@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { setAuthToken } from "@/config/tokens";
+
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
@@ -43,44 +45,34 @@ export default function SignUpForm() {
   const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
-    await fetch("http:localhost:8080/api/v1/auth/lookup", {
+    await fetch("http://localhost:8080/api/v1/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        name: values.name,
         email: values.email,
+        password: values.password,
       }),
     }).then(async (res) => {
-      if (res.status === 302) {
+      if (res.status === 201) {
+        toast({
+          description: "You have successfully signed up!",
+        });
+        const data = await res.json();
+        setAuthToken(data.token);
+        router.replace("/dashboard");
+      } else if (res.status === 400) {
         toast({
           variant: "warning",
           description: "This email is already in use.",
         });
-      } else if (res.status === 404) {
-        await fetch("http://localhost:8080/api/v1/auth/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: values.name,
-            email: values.email,
-            password: values.password,
-          }),
-        }).then((res) => {
-          if (res.ok) {
-            toast({
-              description: "You have successfully signed up!",
-            });
-            // router.replace("/");
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh!",
-              description: "Something went wrong. Please try again.",
-            });
-          }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Uh oh!",
+          description: "Something went wrong. Please try again.",
         });
       }
     });

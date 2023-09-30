@@ -1,7 +1,7 @@
 package com.docuverse.backend.controllers;
 
 import com.docuverse.backend.models.Role;
-import com.docuverse.backend.repository.RoleRepository;
+import com.docuverse.backend.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

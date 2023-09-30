@@ -1,37 +1,37 @@
 package com.docuverse.backend.controllers;
 
-import com.docuverse.backend.models.SignInResponseDTO;
-import com.docuverse.backend.models.SignUpDTO;
-import com.docuverse.backend.models.User;
-import com.docuverse.backend.services.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.docuverse.backend.configuration.UserAuthenticationProvider;
+import com.docuverse.backend.dtos.CredentialsDTO;
+import com.docuverse.backend.dtos.SignUpDTO;
+import com.docuverse.backend.dtos.UserDTO;
+
+import com.docuverse.backend.services.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final UserService userService;
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
-    @PostMapping("/lookup")
-    public ResponseEntity lookupUser(@RequestBody String email) {
-        boolean userExists = authenticationService.lookupUser(email);
-        if (userExists)
-            return ResponseEntity.ok(userExists);
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not in use");
+    @PostMapping("/signin")
+    public ResponseEntity<UserDTO> signin(@RequestBody @Valid CredentialsDTO credentialsDto) {
+        UserDTO userDto = userService.signin(credentialsDto);
+        userDto.setToken(userAuthenticationProvider.createToken(userDto));
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/signup")
-    public User signUpUser(@RequestBody SignUpDTO body) {
-        return authenticationService.signUpUser(body.getUsername(), body.getEmail(), body.getPassword());
-    }
-
-    @PostMapping("/signin")
-    public SignInResponseDTO signInUser(@RequestBody SignUpDTO body) {
-        return authenticationService.signInUser(body.getUsername(), body.getPassword());
+    public ResponseEntity<UserDTO> signup(@RequestBody @Valid SignUpDTO user) {
+        UserDTO createdUser = userService.signup(user);
+        createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
+        return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
     }
 }
