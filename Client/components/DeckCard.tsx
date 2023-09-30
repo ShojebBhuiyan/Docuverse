@@ -5,10 +5,11 @@ import Link from "next/link";
 
 const DeckCard = ({title, id}: PostProps) => {
   return (
-    <Card className="flex border items-center justify-center h-20">
+    <Card className="flex flex-col border-collapse items-center justify-center h-[250px] w-[300px] gap-4 rounded-xl shadow-xl ">
        <CardTitle>
-        <Link href={`/decks/${id}`}> {title} </Link>
+        <Link href={`/decks/${id}`}> Sample Card Title </Link>
        </CardTitle>
+      <div className="text-lg">37 cards</div>
     </Card>
   );
 };
