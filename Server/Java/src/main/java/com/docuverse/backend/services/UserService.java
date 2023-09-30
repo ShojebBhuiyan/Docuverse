@@ -3,8 +3,8 @@ package com.docuverse.backend.services;
 import com.docuverse.backend.dtos.CredentialsDTO;
 import com.docuverse.backend.dtos.SignUpDTO;
 import com.docuverse.backend.dtos.UserDTO;
+import com.docuverse.backend.enums.Subscription;
 import com.docuverse.backend.exceptions.AppException;
-import com.docuverse.backend.mappers.UserMapper;
 import com.docuverse.backend.models.User;
 import com.docuverse.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +23,17 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserMapper userMapper;
-
     public UserDTO signin(CredentialsDTO credentialsDto) {
         User user = userRepository.findByEmail(credentialsDto.email())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
-            return userMapper.toUserDto(user);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getUserId());
+            userDTO.setName(user.getName());
+            userDTO.setEmail(user.getEmail());
+
+            return userDTO;
         }
         throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
@@ -42,18 +45,32 @@ public class UserService {
             throw new AppException("Email already in use!", HttpStatus.BAD_REQUEST);
         }
 
-        User user = userMapper.signUpToUser(userDto);
+        User user = new User();
+        user.setName(userDto.name());
+        user.setEmail(userDto.email());
+        user.setSubscription(Subscription.free);
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
 
         User savedUser = userRepository.save(user);
 
-        return userMapper.toUserDto(savedUser);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(savedUser.getUserId());
+        userDTO.setName(savedUser.getName());
+        userDTO.setEmail(savedUser.getEmail());
+
+        return userDTO;
     }
 
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-        return userMapper.toUserDto(user);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getUserId());
+        userDTO.setName(user.getName());
+        userDTO.setEmail(user.getEmail());
+
+        return userDTO;
     }
 
 }
