@@ -1,20 +1,19 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "./ui/button"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form"
-import { Input } from "./ui/input"
-import { useToast } from "./ui/use-toast"
+import { Button } from "./ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
+import { Input } from "./ui/input";
+import { useToast } from "./ui/use-toast";
 
 const signupFormSchema = z
   .object({
-    firstName: z.string().min(1, "Name can't be empty!"),
-    lastName: z.string().min(1, "Name can't be empty!"),
+    name: z.string().min(1, "Name can't be empty!"),
     email: z.string().email(),
     password: z
       .string()
@@ -28,24 +27,23 @@ const signupFormSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  })
+  });
 
 export default function SignUpForm() {
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       password: "",
     },
-  })
+  });
 
-  const { toast } = useToast()
-  const router = useRouter()
+  const { toast } = useToast();
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
-    await fetch("/api/search-user", {
+    await fetch("http:localhost:8080/api/v1/auth/lookup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,20 +52,19 @@ export default function SignUpForm() {
         email: values.email,
       }),
     }).then(async (res) => {
-      if (res.status === 200) {
+      if (res.ok) {
         toast({
           variant: "warning",
           description: "This email is already in use.",
-        })
-      } else {
-        await fetch("/api/signup", {
+        });
+      } else if (res.status === 404) {
+        await fetch("http://localhost:8080/api/v1/auth/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            firstName: values.firstName,
-            lastName: values.lastName,
+            username: values.name,
             email: values.email,
             password: values.password,
           }),
@@ -75,18 +72,18 @@ export default function SignUpForm() {
           if (res.status === 200) {
             toast({
               description: "You have successfully signed up!",
-            })
-            router.replace("/guided-form")
+            });
+            // router.replace("/");
           } else {
             toast({
               variant: "destructive",
               title: "Uh oh!",
               description: "Something went wrong. Please try again.",
-            })
+            });
           }
-        })
+        });
       }
-    })
+    });
   }
 
   return (
@@ -98,40 +95,22 @@ export default function SignUpForm() {
         <div className="mb-5 flex justify-center">
           <h1 className="text-4xl font-bold text-[#15bebe]">Sign Up</h1>
         </div>
-        <div className="mt-5 flex gap-2">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="your first name"
-                    {...field}
-                    className="border border-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="your last name"
-                    {...field}
-                    className="border border-black"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="your first name"
+                  {...field}
+                  className="border border-black"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -193,5 +172,5 @@ export default function SignUpForm() {
         </div>
       </form>
     </Form>
-  )
+  );
 }

@@ -39,6 +39,7 @@ public class AuthenticationService {
 
     public boolean lookupUser(String email) {
         Optional<User> user = userRepository.findByEmail(email);
+        System.out.println("User: " + user);
         return user.isPresent();
     }
 

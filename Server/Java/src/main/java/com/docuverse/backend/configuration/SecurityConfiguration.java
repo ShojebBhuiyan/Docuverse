@@ -49,8 +49,8 @@ public class SecurityConfiguration {
         return http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((auth) -> {
-                    auth.requestMatchers("/api/v1/auth/**").anonymous();
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers("/api/v1/auth/**").permitAll();
+                    auth.anyRequest().permitAll();
                 })
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -5,8 +5,10 @@ import com.docuverse.backend.models.SignUpDTO;
 import com.docuverse.backend.models.User;
 import com.docuverse.backend.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -16,9 +18,11 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/lookup")
-    public ResponseEntity<Boolean> lookupUser(@RequestBody String email) {
+    public ResponseEntity lookupUser(@RequestBody String email) {
         boolean userExists = authenticationService.lookupUser(email);
-        return ResponseEntity.ok(userExists);
+        if (userExists)
+            return ResponseEntity.ok(userExists);
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not in use");
     }
 
     @PostMapping("/signup")

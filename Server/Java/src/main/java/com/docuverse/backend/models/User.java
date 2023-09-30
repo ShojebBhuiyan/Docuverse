@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "User")
+@Table(name = "Users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,8 @@ public class User implements UserDetails {
     private long userId;
     @Column(name = "name")
     private String name;
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
+
     private String email;
     @Column(name = "password")
     private String password;
