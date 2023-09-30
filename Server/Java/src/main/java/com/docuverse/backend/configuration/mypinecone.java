@@ -163,8 +163,10 @@ public class mypinecone implements EmbeddingStore<TextSegment> {
                 .setTopK(maxResults)
                 .build();
 
-        List<String> matchedVectorIds = connection.getBlockingStub()
-                .query(queryRequest)
+        QueryResponse queryResponse = connection.getBlockingStub()
+                .query(queryRequest);
+
+        List<String> matchedVectorIds = queryResponse
                 .getResultsList()
                 .get(0)
                 .getMatchesList()
