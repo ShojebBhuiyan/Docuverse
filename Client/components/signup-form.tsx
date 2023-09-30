@@ -52,7 +52,7 @@ export default function SignUpForm() {
         email: values.email,
       }),
     }).then(async (res) => {
-      if (res.ok) {
+      if (res.status === 302) {
         toast({
           variant: "warning",
           description: "This email is already in use.",
@@ -69,7 +69,7 @@ export default function SignUpForm() {
             password: values.password,
           }),
         }).then((res) => {
-          if (res.status === 200) {
+          if (res.ok) {
             toast({
               description: "You have successfully signed up!",
             });
