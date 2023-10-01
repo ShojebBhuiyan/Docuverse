@@ -1,33 +1,5 @@
-package com.docuverse.backend.models;
+package com.docuverse.backend.dtos;
 
-public class ChatRequest {
-    private String question;
-
-
-    // Constructors, getters, and setters
-
-    public ChatRequest() {
-        // Default constructor
-    }
-
-    public ChatRequest(String question) {
-        this.question = question;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-
-    @Override
-    public String toString() {
-        return "ChatRequest{" +
-                "question='" + question + '\'' +
-                '}';
-    }
+public record ChatRequestDTO (Long threadId, String question){
 }
 

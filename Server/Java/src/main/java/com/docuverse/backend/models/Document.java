@@ -1,5 +1,6 @@
 package com.docuverse.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +29,9 @@ public class Document {
     @Column(name = "text")
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "thread_id")
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "threadId")
     private Thread thread;
 
 }

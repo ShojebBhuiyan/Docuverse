@@ -8,9 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,8 +26,5 @@ public class Thread {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     private User user;
-
-    @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
-    private List<Document> documents = new ArrayList<>();
 
 }

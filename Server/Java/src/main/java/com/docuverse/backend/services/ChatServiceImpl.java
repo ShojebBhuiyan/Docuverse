@@ -1,6 +1,6 @@
 package com.docuverse.backend.services;
 
-import com.docuverse.backend.models.ChatRequest;
+import com.docuverse.backend.dtos.ChatRequestDTO;
 import dev.langchain4j.chain.ConversationalRetrievalChain;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.segment.TextSegment;
@@ -10,7 +10,6 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.retriever.EmbeddingStoreRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
@@ -25,7 +24,6 @@ import java.util.Map;
 import static dev.langchain4j.data.message.ChatMessageDeserializer.messagesFromJson;
 import static dev.langchain4j.data.message.ChatMessageSerializer.messagesToJson;
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
-import static dev.langchain4j.model.openai.OpenAiModelName.TEXT_EMBEDDING_ADA_002;
 import static java.time.Duration.ofSeconds;
 import static org.mapdb.Serializer.STRING;
 
@@ -42,7 +40,7 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public String processChat(ChatRequest request) {
+    public String processChat(ChatRequestDTO request) {
         Dotenv dotenv = Dotenv.load();
 
         // Create a prompt template
@@ -81,7 +79,7 @@ public class ChatServiceImpl implements ChatService {
                     .promptTemplate(promptTemplate) // you can override default prompt template
                     .build();
 
-            String answer = chain.execute(request.getQuestion());
+            String answer = chain.execute(request.question());
             System.out.println(chatMemory.messages());
             return answer;
         } catch (Exception e) {

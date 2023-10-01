@@ -32,4 +32,25 @@ public class ThreadService {
 //        threadRepository.findByUser(user).forEach(threadList::add);
         return threadRepository.findByUser(user);
     }
+
+    public List<Thread> createThread(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        Thread thread = new Thread();
+        thread.setUser(user);
+        thread.setTitle("New Thread");
+        threadRepository.save(thread);
+
+        return threadRepository.findByUser(user);
+    }
+
+    public List<Thread> updateThreadTitle(Long userId, Long threadId, String title) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        Thread thread = threadRepository.findById(threadId).get();
+        thread.setTitle(title);
+        threadRepository.save(thread);
+
+        return threadRepository.findByUser(user);
+    }
 }
