@@ -41,11 +41,13 @@ export function MainNav({ items }: MainNavProps) {
                   </Link>
                 )
             )}
-            <NavbarAuthButtons />
-            <ThemeToggle />
           </nav>
         </>
       ) : null}
+      <div className="flex justify-end gap-2">
+        <NavbarAuthButtons />
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

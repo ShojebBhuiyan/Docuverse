@@ -1,5 +1,3 @@
-import { Trash2 } from "lucide-react"
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,36 +8,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 interface ButtonProps {
-  handleDelete: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void
-  id: number
+  handleDelete: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
+  id: number;
 }
 
 const DeleteFlashcard = ({ handleDelete, id }: ButtonProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete current flashcard</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Button size="sm"> Delete </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -57,7 +38,7 @@ const DeleteFlashcard = ({ handleDelete, id }: ButtonProps) => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
-}
+  );
+};
 
-export default DeleteFlashcard
+export default DeleteFlashcard;

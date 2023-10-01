@@ -3,7 +3,7 @@ package com.docuverse.backend.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "FlashCard")
+@Table(name = "FlashCards")
 public class FlashCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

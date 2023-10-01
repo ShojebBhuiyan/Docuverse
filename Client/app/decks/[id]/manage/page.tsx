@@ -1,11 +1,10 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import * as z from "zod"
+import React, { useEffect, useState } from "react";
+import * as z from "zod";
 
-
-import { CardProps } from "@/types/types"
-import { Button } from "@/components/ui/button"
+import { CardProps } from "@/types/types";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -13,22 +12,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import DeleteFlashcard from "@/components/DeleteFlashcard"
-
+} from "@/components/ui/table";
+import AddFlashcard from "@/components/AddFlashcard";
+import DeleteFlashcard from "@/components/DeleteFlashcard";
 
 const page = () => {
-  const [data, setData] = useState<CardProps[]>()
-  const [reloadKey, setReloadKey] = useState(0)
+  const [data, setData] = useState<CardProps[]>();
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/v1/flashcard/all")
       .then((res) => res.json())
       .then((data) => {
-        setData(data)
-        console.log(data)
-      })
-  }, [reloadKey])
+        setData(data);
+        console.log(data);
+      });
+  }, [reloadKey]);
 
   const deleteUser = async (id: number) => {
     try {
@@ -43,22 +42,22 @@ const page = () => {
             id,
           }),
         }
-      )
+      );
 
       if (response.status === 200) {
-        const responseData = await response.json()
-        setReloadKey(reloadKey + 1)
+        const responseData = await response.json();
+        setReloadKey(reloadKey + 1);
       } else {
-        console.error("Delete request failed")
+        console.error("Delete request failed");
       }
     } catch (error) {
-      console.error("An error occurred", error)
+      console.error("An error occurred", error);
     }
-  }
+  };
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    deleteUser(id)
-  }
+    deleteUser(id);
+  };
 
   return (
     <div className="flex flex-wrap flex-col w-[1000px] ml-[325px] mt-[100px] gap-9">
@@ -80,17 +79,16 @@ const page = () => {
               <TableCell>{post.question}</TableCell>
               <TableCell>{post.answer}</TableCell>
               <TableCell className="flex gap-2">
-              
+                <AddFlashcard />
                 <Button size="sm">Edit</Button>
-                <DeleteFlashcard handleDelete={handleDelete} id={post.id}  />
+                <DeleteFlashcard handleDelete={handleDelete} id={post.id} />
               </TableCell>
             </TableRow>
           </TableBody>
         ))}
       </Table>
     </div>
+  );
+};
 
-  )
-}
-
-export default page
+export default page;
