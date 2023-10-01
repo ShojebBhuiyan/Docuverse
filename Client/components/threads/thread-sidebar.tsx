@@ -8,7 +8,15 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 
-export default function ThreadSidebar() {
+export interface ThreadSidebarProps {
+  thread: number;
+  setThread: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export default function ThreadSidebar({
+  thread,
+  setThread,
+}: ThreadSidebarProps) {
   const [threads, setThreads] = useState<
     { title: string; id: number }[] | null
   >();
@@ -74,6 +82,9 @@ export default function ThreadSidebar() {
               <Button
                 variant={"secondary"}
                 className="rounded-0 hover:text-primary"
+                onClick={() => {
+                  setThread(thread.id);
+                }}
               >
                 {thread.title}
               </Button>

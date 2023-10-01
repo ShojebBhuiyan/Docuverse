@@ -22,7 +22,7 @@ export default function NavbarAuthButtons() {
     <>
       {isAuthenticated ? (
         <>
-          <NavButton description="Profile" href="/profile" variant="default" />
+          {/* <NavButton description="Profile" href="/profile" variant="default" /> */}
           <Button
             variant={"default"}
             className="text-lg"
