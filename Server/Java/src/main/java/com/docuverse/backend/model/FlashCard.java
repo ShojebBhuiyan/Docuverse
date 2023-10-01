@@ -15,14 +15,18 @@ public class FlashCard {
     @Column(name = "answer")
     private String answer;
 
+    @Column(name = "weight")
+    private int weight;
+
     public FlashCard() {
 
     }
 
-    public FlashCard(String title, String question, String answer) {
+    public FlashCard(String title, String question, String answer, int weight) {
         this.title = title;
         this.question = question;
         this.answer = answer;
+        setWeight(weight); // Use the setter to ensure validation
     }
 
     public long getId() {
@@ -55,5 +59,13 @@ public class FlashCard {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public void setWeight(int weight) {
+        // Validate that weight is within the range [0, 3]
+        if (weight < 0 || weight > 3) {
+            throw new IllegalArgumentException("Weight must be between 0 and 3");
+        }
+        this.weight = weight;
     }
 }
