@@ -19,7 +19,7 @@ const AddFlashcard = () => {
         <DialogHeader>
           <DialogTitle>Add flashcard</DialogTitle>
           <DialogDescription>
-            Add new flashcard here. Click save when you're done.
+            Add new flashcard here. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
