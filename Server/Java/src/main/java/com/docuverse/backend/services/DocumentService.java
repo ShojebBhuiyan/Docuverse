@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 import static java.time.Duration.ofSeconds;
@@ -39,7 +40,7 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public String extractTextFromPDF(MultipartFile pdfFile) throws IOException {
+    public String extractTextFromPDF(MultipartFile pdfFile, String threadId) throws IOException {
         System.out.println("Inside service");
         try (
                 InputStream is = pdfFile.getInputStream();
@@ -49,8 +50,18 @@ public class DocumentService {
             String text = stripper.getText(document);
 
 
-            com.docuverse.backend.models.Document newDocument = new com.docuverse.backend.models.Document();
-            newDocument.setText(text);
+            Optional<com.docuverse.backend.models.Document> existingDocument = documentRepository.findDocumentByTitle(pdfFile.getOriginalFilename());
+
+            if (existingDocument.isPresent()) {
+                existingDocument.get().setTitle(pdfFile.getOriginalFilename());
+                existingDocument.get().setText(text);
+                documentRepository.save(existingDocument.get());
+            } else {
+                com.docuverse.backend.models.Document newDocument = new com.docuverse.backend.models.Document();
+                newDocument.setTitle(pdfFile.getOriginalFilename());
+                newDocument.setText(text);
+                documentRepository.save(newDocument);
+            }
             // System.out.println(text);
             document.close();
             return text;

@@ -24,6 +24,10 @@ public class Thread {
     @Column(name = "title")
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
     private List<Document> documents = new ArrayList<>();
 

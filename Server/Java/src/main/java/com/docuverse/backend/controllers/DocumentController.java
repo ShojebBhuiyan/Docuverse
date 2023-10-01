@@ -61,7 +61,7 @@ public class DocumentController {
                 try {
                     System.out.println("Thread: " + Thread.currentThread().getName());
                     System.out.println("Extract Thread");
-                    String text = documentService.extractTextFromPDF(pdfFile);
+                    String text = documentService.extractTextFromPDF(pdfFile, threadId);
                     Metadata metadata = documentService.createMetadataFromMultipartFile(pdfFile);
                     Document document = new Document(text, metadata);
                     System.out.println("Checkpoint document");

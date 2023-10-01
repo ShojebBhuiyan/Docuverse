@@ -5,7 +5,9 @@ import com.docuverse.backend.dtos.SignUpDTO;
 import com.docuverse.backend.dtos.UserDTO;
 import com.docuverse.backend.enums.Subscription;
 import com.docuverse.backend.exceptions.AppException;
+import com.docuverse.backend.models.Thread;
 import com.docuverse.backend.models.User;
+import com.docuverse.backend.repositories.ThreadRepository;
 import com.docuverse.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ThreadRepository threadRepository;
 
     public UserDTO signin(CredentialsDTO credentialsDto) {
         User user = userRepository.findByEmail(credentialsDto.email())
@@ -51,7 +55,12 @@ public class UserService {
         user.setSubscription(Subscription.free);
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
 
+
+        Thread thread = new Thread();
+        thread.setUser(user);
+        thread.setTitle("New Thread");
         User savedUser = userRepository.save(user);
+        threadRepository.save(thread);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setId(savedUser.getUserId());
