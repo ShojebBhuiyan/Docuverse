@@ -41,6 +41,7 @@ public class FlashCardController {
         flashCard.setTitle(flashCardInfo.getTitle());
         flashCard.setQuestion(flashCardInfo.getQuestion());
         flashCard.setAnswer(flashCardInfo.getAnswer());
+        flashCard.setWeight(flashCardInfo.getWeight());
 
         FlashCard updatedFlashCard = flashCardRepository.save(flashCard);
 
