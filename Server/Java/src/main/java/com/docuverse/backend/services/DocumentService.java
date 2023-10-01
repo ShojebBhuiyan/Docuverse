@@ -11,6 +11,8 @@ import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import io.github.cdimascio.dotenv.Dotenv;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -38,7 +40,8 @@ public class DocumentService {
 
     public String extractTextFromPDF(MultipartFile pdfFile) throws IOException {
         System.out.println("Inside service");
-        try (InputStream is = pdfFile.getInputStream();
+        try (
+                InputStream is = pdfFile.getInputStream();
                 PDDocument document = Loader.loadPDF(is.readAllBytes());) {
 
             PDFTextStripper stripper = new PDFTextStripper();
