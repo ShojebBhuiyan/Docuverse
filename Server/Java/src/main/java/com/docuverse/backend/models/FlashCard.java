@@ -8,18 +8,12 @@ public class FlashCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "title")
     private String title;
-
     @Column(name = "question")
     private String question;
-
     @Column(name = "answer")
     private String answer;
-
-    @Column(name = "weight") // New field for weight
-    private int weight = 3; // Set weight to 3 upon generation
 
     public FlashCard() {
 
@@ -29,7 +23,6 @@ public class FlashCard {
         this.title = title;
         this.question = question;
         this.answer = answer;
-        // Weight is set to 3 upon generation
     }
 
     public long getId() {
@@ -62,13 +55,5 @@ public class FlashCard {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-    }
-
-    public int getWeight() {
-        return weight;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
     }
 }
