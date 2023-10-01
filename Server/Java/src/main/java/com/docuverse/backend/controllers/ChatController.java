@@ -26,17 +26,17 @@ public class ChatController {
     public ResponseEntity<ChatResponseDTO> chat(@RequestBody ChatRequestDTO request) {
         try {
             // Process the chat request using the ChatService
-            messageService.createMessage(request.threadId(), request.question(), MessageRole.USER);
+            messageService.createMessage(request.threadId(), request.question(), MessageRole.user);
             String response = chatService.processChat(request);
 
             // Optionally, you can log the request and response here
-            ChatResponseDTO chatResponse = new ChatResponseDTO(response, MessageRole.ASSISTANT);
-            messageService.createMessage(request.threadId(), chatResponse.response(), MessageRole.ASSISTANT);
+            ChatResponseDTO chatResponse = new ChatResponseDTO(response, MessageRole.assistant);
+            messageService.createMessage(request.threadId(), chatResponse.response(), MessageRole.assistant);
 
             return ResponseEntity.ok(chatResponse);
         } catch (Exception e) {
             // Handle exceptions and return an appropriate error response
-            ChatResponseDTO chatResponse = new ChatResponseDTO("Something went wrong", MessageRole.ASSISTANT);
+            ChatResponseDTO chatResponse = new ChatResponseDTO("Something went wrong", MessageRole.error);
             return ResponseEntity.internalServerError().body(chatResponse);
         }
     }
