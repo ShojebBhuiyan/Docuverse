@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import DeleteFlashcard from "@/components/DeleteFlashcard"
-import AddFlashcard from "@/components/AddFlashcard"
+
 
 const page = () => {
   const [data, setData] = useState<CardProps[]>()
@@ -80,7 +80,7 @@ const page = () => {
               <TableCell>{post.question}</TableCell>
               <TableCell>{post.answer}</TableCell>
               <TableCell className="flex gap-2">
-                <AddFlashcard />
+              
                 <Button size="sm">Edit</Button>
                 <DeleteFlashcard handleDelete={handleDelete} id={post.id}  />
               </TableCell>
