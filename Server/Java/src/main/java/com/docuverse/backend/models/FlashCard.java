@@ -1,4 +1,4 @@
-package com.docuverse.backend.model;
+package com.docuverse.backend.models;
 
 import jakarta.persistence.*;
 

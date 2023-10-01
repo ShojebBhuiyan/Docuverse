@@ -1,8 +1,8 @@
-package com.docuverse.backend.controller;
+package com.docuverse.backend.controllers;
 
-import com.docuverse.backend.exception.ResourceNotFoundException;
-import com.docuverse.backend.model.FlashCard;
-import com.docuverse.backend.repository.FlashCardRepository;
+import com.docuverse.backend.exceptions.ResourceNotFoundException;
+import com.docuverse.backend.models.FlashCard;
+import com.docuverse.backend.repositories.FlashCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
