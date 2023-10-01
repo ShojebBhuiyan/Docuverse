@@ -1,8 +1,8 @@
 package com.docuverse.backend.controllers;
 
-import com.docuverse.backend.exception.ResourceNotFoundException;
+import com.docuverse.backend.exceptions.ResourceNotFoundException;
 import com.docuverse.backend.models.User;
-import com.docuverse.backend.repository.UserRepository;
+import com.docuverse.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

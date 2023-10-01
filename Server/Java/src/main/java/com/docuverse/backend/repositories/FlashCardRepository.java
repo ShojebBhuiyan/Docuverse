@@ -1,4 +1,4 @@
-package com.docuverse.backend.repository;
+package com.docuverse.backend.repositories;
 
 import com.docuverse.backend.models.FlashCard;
 import org.springframework.data.jpa.repository.JpaRepository;
