@@ -13,10 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/flashcard")
-@CrossOrigin(origins = "http://localhost:3000")
 public class FlashCardController {
     @Autowired
     private FlashCardRepository flashCardRepository;
+
     @GetMapping("/{id}")
     public ResponseEntity<FlashCard> getFlashCardById(@PathVariable Long id) {
         FlashCard flashCard = flashCardRepository.findById(id)
@@ -41,7 +41,6 @@ public class FlashCardController {
         flashCard.setTitle(flashCardInfo.getTitle());
         flashCard.setQuestion(flashCardInfo.getQuestion());
         flashCard.setAnswer(flashCardInfo.getAnswer());
-        flashCard.setWeight(flashCardInfo.getWeight());
 
         FlashCard updatedFlashCard = flashCardRepository.save(flashCard);
 
