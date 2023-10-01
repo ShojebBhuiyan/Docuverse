@@ -37,7 +37,7 @@ public class StorageService {
                 .build();
     }
 
-    public void uploadFile(MultipartFile file) throws IOException {
+    public void uploadFile(MultipartFile file, String threadId) throws IOException {
         System.out.println("Upload Service");
         System.out.println("Bucket: " + dotenv.get("DO_SPACES_NAME"));
 
@@ -48,7 +48,7 @@ public class StorageService {
             String fileName = DateTime.now().toString() + file.getOriginalFilename();
             System.out.println("Input Stream Got");
 
-            space.putObject(new PutObjectRequest(dotenv.get("DO_SPACES_NAME"), fileName, fs, objectMetadata));
+            space.putObject(new PutObjectRequest(dotenv.get("DO_SPACES_ENDPOINT"), threadId + "/" + fileName, fs, objectMetadata));
         } catch (IOException e) {
             e.printStackTrace();
         }

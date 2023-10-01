@@ -7,6 +7,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import com.docuverse.backend.services.StorageService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +38,10 @@ public class DocumentController {
     ThreadPoolExecutor threadPoolExecutor;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadPDFs(@RequestParam("files") MultipartFile[] pdfFiles) {
+    public ResponseEntity<String> uploadPDFs(@RequestParam("files") MultipartFile[] pdfFiles, @RequestParam("threadId") String threadId) {
         // ExecutorService executorService = Executors.newFixedThreadPool(2);
         System.out.println("STARTED");
+
         // EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
         for (MultipartFile pdfFile : pdfFiles) {
@@ -48,7 +50,8 @@ public class DocumentController {
                     // Upload the PDF to S3 concurrently
                     System.out.println("Thread: " + Thread.currentThread().getName());
                     System.out.println("Upload Thread");
-                    storageService.uploadFile(pdfFile);
+                    System.out.println("Thread ID: " + threadId);
+                    storageService.uploadFile(pdfFile, threadId);
                 } catch (Exception e) {
                     System.out.println("Error uploading");
                     e.printStackTrace();

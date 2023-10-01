@@ -23,7 +23,11 @@ const options = {
 
 type PDFFile = string | File | null;
 
-export default function PDFSection() {
+interface PDFSectionProps {
+  threadId: string;
+}
+
+export default function PDFSection({ threadId }: PDFSectionProps) {
   const [file, setFile] = useState<PDFFile>(null);
   console.log(file);
   const [numPages, setNumPages] = useState<number>();
@@ -43,7 +47,7 @@ export default function PDFSection() {
   }
 
   return (
-    <div className="flex h-screen w-full items-start">
+    <div className="flex h-fit w-full items-start overflow-y-auto">
       <Tabs defaultValue="title">
         <TabsList>
           <TabsTrigger value="title">PDF TITLE</TabsTrigger>
@@ -51,7 +55,7 @@ export default function PDFSection() {
         <TabsContent value="title">
           <label htmlFor="file">Load from file:</label>{" "}
           {/* <input onChange={onFileChange} type="file" /> */}
-          <PDFUploadForm parentOnChange={onFileChange} />
+          <PDFUploadForm parentOnChange={onFileChange} threadId={threadId} />
           <Document
             file={file}
             onLoadSuccess={onDocumentLoadSuccess}

@@ -1,5 +1,6 @@
 package com.docuverse.backend.services;
 
+import com.docuverse.backend.repositories.DocumentRepository;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.Metadata;
@@ -7,24 +8,21 @@ import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import io.github.cdimascio.dotenv.Dotenv;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
-import static dev.langchain4j.model.openai.OpenAiModelName.TEXT_EMBEDDING_ADA_002;
 import static java.time.Duration.ofSeconds;
 
 @Service
@@ -33,9 +31,12 @@ public class DocumentService {
     private final EmbeddingStore<TextSegment> embeddingStore;
     private final EmbeddingModel embeddingModel;
 
-    public DocumentService(EmbeddingStore<TextSegment> embeddingStore, EmbeddingModel embeddingModel) {
+    private final DocumentRepository documentRepository;
+
+    public DocumentService(EmbeddingStore<TextSegment> embeddingStore, EmbeddingModel embeddingModel, DocumentRepository documentRepository) {
         this.embeddingStore = embeddingStore;
         this.embeddingModel = embeddingModel;
+        this.documentRepository = documentRepository;
     }
 
     public String extractTextFromPDF(MultipartFile pdfFile) throws IOException {
@@ -47,6 +48,9 @@ public class DocumentService {
             PDFTextStripper stripper = new PDFTextStripper();
             String text = stripper.getText(document);
 
+
+            com.docuverse.backend.models.Document newDocument = new com.docuverse.backend.models.Document();
+            newDocument.setText(text);
             // System.out.println(text);
             document.close();
             return text;

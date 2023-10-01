@@ -34,10 +34,14 @@ const pdfUploadFormSchema = z
   });
 
 interface PDFUploadFormProps {
+  threadId: string;
   parentOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
+export default function PDFUploadForm({
+  threadId,
+  parentOnChange,
+}: PDFUploadFormProps) {
   const form = useForm<z.infer<typeof pdfUploadFormSchema>>({
     resolver: zodResolver(pdfUploadFormSchema),
   });
@@ -47,6 +51,8 @@ export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
   async function onSubmit(values: z.infer<typeof pdfUploadFormSchema>) {
     try {
       const formData = new FormData();
+
+      formData.append("threadId", threadId);
 
       for (let i = 0; i < values.files.length; i++) {
         formData.append(`files`, values.files[i]);

@@ -24,7 +24,7 @@ public class Thread {
     @Column(name = "title")
     private String title;
 
-    @OneToMany(mappedBy = "Threads", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
     private List<Document> documents = new ArrayList<>();
 
 }
