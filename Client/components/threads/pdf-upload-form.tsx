@@ -58,6 +58,7 @@ export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + localStorage.getItem("auth-token"),
           },
         }
       );
