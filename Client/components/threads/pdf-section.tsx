@@ -23,11 +23,7 @@ const options = {
 
 type PDFFile = string | File | null;
 
-interface PDFSectionProps {
-  threadId: string;
-}
-
-export default function PDFSection({ threadId }: PDFSectionProps) {
+export default function PDFSection() {
   const [file, setFile] = useState<PDFFile>(null);
   console.log(file);
   const [numPages, setNumPages] = useState<number>();
@@ -55,7 +51,7 @@ export default function PDFSection({ threadId }: PDFSectionProps) {
         <TabsContent value="title">
           <label htmlFor="file">Load from file:</label>{" "}
           {/* <input onChange={onFileChange} type="file" /> */}
-          <PDFUploadForm parentOnChange={onFileChange} threadId={threadId} />
+          <PDFUploadForm parentOnChange={onFileChange} />
           <Document
             file={file}
             onLoadSuccess={onDocumentLoadSuccess}

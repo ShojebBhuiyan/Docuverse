@@ -1,6 +1,7 @@
 package com.docuverse.backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,8 +25,9 @@ public class Thread {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
     private User user;
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)

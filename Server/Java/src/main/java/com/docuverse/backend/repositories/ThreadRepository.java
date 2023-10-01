@@ -11,4 +11,7 @@ import java.util.List;
 public interface ThreadRepository extends JpaRepository<Thread, Long> {
     Thread findByTitle(String title);
     List<Thread> findByUser(User user);
+
+
+//    List<Thread> findByUserId(Long userId);
 }

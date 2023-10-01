@@ -44,7 +44,7 @@ public class UserAuthenticationProvider {
                 .withSubject(user.getEmail())
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
-//                .withClaim("id", user.getId())
+                .withClaim("id", user.getId())
                 .withClaim("name", user.getName())
                 .sign(algorithm);
     }
@@ -59,7 +59,7 @@ public class UserAuthenticationProvider {
 
         UserDTO user = UserDTO.builder()
                 .email(decoded.getSubject())
-//                .id(decoded.getClaim("id").asLong())
+                .id(decoded.getClaim("id").asLong())
                 .name(decoded.getClaim("name").asString())
                 .build();
 
@@ -82,11 +82,12 @@ public class UserAuthenticationProvider {
     public UserDTO parseToken(String token) {
         token = token.replace("Bearer ", "");
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
+        System.out.println("Inside parser");
         JWTVerifier verifier = JWT.require(algorithm)
                 .build();
 
         DecodedJWT decoded = verifier.verify(token);
+        System.out.println("Decoded");
 
         UserDTO user = UserDTO.builder()
                 .email(decoded.getSubject())

@@ -18,15 +18,6 @@ import { Input } from "../ui/input";
 const pdfUploadFormSchema = z
   .object({
     files: z.instanceof(FileList),
-    // files: z.array(
-    //   z.string().refine((data) => {
-    //     for (const file of data) {
-    //       if (!file.endsWith(".pdf")) {
-    //         return false;
-    //       }
-    //     }
-    //     return true;
-    //   })
   })
   .refine((data) => data.files.length != 0, {
     message: "Choose a file!",
@@ -34,14 +25,10 @@ const pdfUploadFormSchema = z
   });
 
 interface PDFUploadFormProps {
-  threadId: string;
   parentOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function PDFUploadForm({
-  threadId,
-  parentOnChange,
-}: PDFUploadFormProps) {
+export default function PDFUploadForm({ parentOnChange }: PDFUploadFormProps) {
   const form = useForm<z.infer<typeof pdfUploadFormSchema>>({
     resolver: zodResolver(pdfUploadFormSchema),
   });
@@ -52,7 +39,7 @@ export default function PDFUploadForm({
     try {
       const formData = new FormData();
 
-      formData.append("threadId", threadId);
+      // formData.append("threadId", threadId);
 
       for (let i = 0; i < values.files.length; i++) {
         formData.append(`files`, values.files[i]);
@@ -90,7 +77,7 @@ export default function PDFUploadForm({
                     accept=".pdf"
                     placeholder="upload your file"
                     {...fieldProps}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     onChange={(event) => {
                       parentOnChange(event);
                       onChange(event.target.files && event.target.files);

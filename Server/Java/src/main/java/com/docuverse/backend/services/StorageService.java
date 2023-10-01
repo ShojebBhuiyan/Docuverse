@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.docuverse.backend.models.Document;
@@ -56,7 +57,7 @@ public class StorageService {
             objectMetadata.setContentLength(file.getSize());
             String fileName = DateTime.now().toString() + file.getOriginalFilename();
             System.out.println("Input Stream Got");
-            space.putObject(new PutObjectRequest(dotenv.get("DO_SPACES_ENDPOINT"), threadId + "/" + fileName, fs, objectMetadata));
+            space.putObject(new PutObjectRequest(dotenv.get("DO_SPACES_ENDPOINT"), threadId + "/" + fileName, fs, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
 
             Optional<Document> existingDocument = documentRepository.findDocumentByTitle(file.getOriginalFilename());
 

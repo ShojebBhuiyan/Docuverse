@@ -19,6 +19,8 @@ public class ThreadController {
     @PostMapping("/")
     public ResponseEntity<List<Thread>> getAllThreads(@RequestHeader("Authorization") String jwtToken) {
         Long id = userAuthenticationProvider.parseToken(jwtToken).getId();
+        System.out.println("Got id: " + id);
+
         return ResponseEntity.ok(threadService.getAllUserThreads(id));
     }
 }
