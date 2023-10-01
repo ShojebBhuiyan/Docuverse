@@ -14,26 +14,11 @@ const page = () => {
   const [data, setData] = useState<CardProps[]>()
   const [front, setFront] = useState(true)
   const [masteredCards, setMasteredCards] = useState(0)
-  let  totalCards = 0 ;
+  const [totalCards, setTotalCards] = useState(0)
 
   useEffect(() => {
     // Function to shuffle the data based on weights
-    function weightedShuffle(data: CardProps[]): CardProps[] {
-      // Calculate the total weight
-      const totalWeight = data.reduce((sum, item) => sum + item.weight, 0)
-
-      // Generate a random number between 0 and the totalWeight
-      const randomValue = Math.random() * totalWeight
-
-      // Sort the data based on cumulative weights
-      let cumulativeWeight = 0
-      data.sort((a) => {
-        cumulativeWeight += a.weight
-        return cumulativeWeight - randomValue
-      })
-
-      return data
-    }
+    
     fetch("http://localhost:8080/api/v1/flashcard/all")
       .then((res) => res.json())
       .then((data: CardProps[]) => {
@@ -43,7 +28,7 @@ const page = () => {
         // Shuffle the data based on weights
         weightedShuffle(data)
 
-        totalCards = data.length;
+        setTotalCards(data.length);
 
         let cardsWithWeightZero = Object.values(data).filter((item: CardProps) => item.weight === 0);
 
@@ -79,6 +64,23 @@ const page = () => {
     } catch (error) {
       console.error("An error occurred", error)
     }
+  }
+
+  function weightedShuffle(data: CardProps[]): CardProps[] {
+    // Calculate the total weight
+    const totalWeight = data.reduce((sum, item) => sum + item.weight, 0)
+
+    // Generate a random number between 0 and the totalWeight
+    const randomValue = Math.random() * totalWeight
+
+    // Sort the data based on cumulative weights
+    let cumulativeWeight = 0
+    data.sort((a) => {
+      cumulativeWeight += a.weight
+      return cumulativeWeight - randomValue
+    })
+
+    return data
   }
 
   const handleClickIncorrect = (
