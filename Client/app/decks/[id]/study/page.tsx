@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+
 import { CardProps } from "@/types/types"
 import { Button } from "@/components/ui/button"
+import { set } from "zod"
 
 const page = () => {
   const { id } = useParams()
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(1)
   const [data, setData] = useState<CardProps[]>()
   const [front, setFront] = useState(true)
 
@@ -21,12 +23,14 @@ const page = () => {
       })
   }, [])
 
-  const handleClickLeft = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickIncorrect = (e: React.MouseEvent<HTMLButtonElement>) => {
     //e.preventDefault();
-    count > 0 && setCount(count - 1)
+    setFront(true)
+    setCount(count + 1)
+    
   }
 
-  const handleClickRight = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickCorrect = (e: React.MouseEvent<HTMLButtonElement>) => {
     //e.preventDefault();
     setFront(true)
     setCount(count + 1)
@@ -38,36 +42,55 @@ const page = () => {
   }
 
   return (
-    <div className="flex mx-16 my-16">
-      <div className="flex flex-col  w-[1000px] h-[400px] items-end [perspective:1000px] gap-2  ">
-        {front ? (
-          <div className="text-xl">Question</div>
-        ) : (
-          <div className="text-xl">Answer</div>
-        )}
+    <div className="flex mx-16 my-8">
+      <div className="flex flex-col  w-[1000px] h-[450px]  [perspective:1000px] gap-2 ">
         <div
           className={`relative border h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] ${
             front ? "" : "[transform:rotateY(180deg)]"
           }`}
         >
           {front ? (
-            <div className="flex items-center justify-center absolute inset-0 rounded-xl px-12  [backface-visibility:hidden] ">
-              <div className="">{data?.[count]?.question}</div>
+            <div className="flex flex-col items-center absolute inset-0 rounded-xl px-12  [backface-visibility:hidden] pt-5 gap-5">
+              <div className="text-xl">`Question${count}`</div>
+              <div className=" ">{data?.[count]?.question}</div>
             </div>
           ) : (
-            <div className="absolute flex items-center justify-center inset-0 rounded-xl px-12 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+            <div className="absolute flex flex-col items-center inset-0 rounded-xl px-12 pt-5 gap-5 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+              <div className="text-xl">Answer</div>
               <div>{data?.[count]?.answer}</div>
             </div>
           )}
         </div>
-        <Button className="" onClick={handleCard} variant="default" size="lg">
-          Flip Card
-        </Button>
+        <div className="flex  items-center">
+        <div className="flex gap-2 w-[545px] pl-[220px]">
+          {front ? (
+            <div> </div>
+          ) : (
+            <>
+              <Button
+                className="bg-green-500 text-white  hover:bg-green-600 py-2 px-4 rounded-sm"
+                onClick={handleClickCorrect}
+                variant="default"
+                size="sm"
+              >
+                Correct
+              </Button>
+              <Button className="hover:bg-red-600" onClick={handleClickIncorrect} variant="destructive" size="sm">
+                Incorrect
+              </Button>
+              </>
+            
+          )}
+          </div>
+          <Button className=" hover:bg-black " onClick={handleCard} variant="default" size="sm">
+            Flip Card
+          </Button>
+        </div>
       </div>
       <div className="flex w-[800px] p-4 justify-center gap-4 ">
         <Button
           className=""
-          onClick={handleClickLeft}
+          
           variant="outline"
           size="icon"
         >
@@ -75,7 +98,7 @@ const page = () => {
         </Button>
         <Button
           className=""
-          onClick={handleClickRight}
+          
           variant="outline"
           size="icon"
         >

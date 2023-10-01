@@ -8,25 +8,28 @@ public class FlashCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "question")
     private String question;
+
     @Column(name = "answer")
     private String answer;
 
-    @Column(name = "weight")
-    private int weight;
+    @Column(name = "weight") // New field for weight
+    private int weight = 3; // Set weight to 3 upon generation
 
     public FlashCard() {
 
     }
 
-    public FlashCard(String title, String question, String answer, int weight) {
+    public FlashCard(String title, String question, String answer) {
         this.title = title;
         this.question = question;
         this.answer = answer;
-        setWeight(weight); // Use the setter to ensure validation
+        // Weight is set to 3 upon generation
     }
 
     public long getId() {
@@ -61,11 +64,11 @@ public class FlashCard {
         this.answer = answer;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
     public void setWeight(int weight) {
-        // Validate that weight is within the range [0, 3]
-        if (weight < 0 || weight > 3) {
-            throw new IllegalArgumentException("Weight must be between 0 and 3");
-        }
         this.weight = weight;
     }
 }
