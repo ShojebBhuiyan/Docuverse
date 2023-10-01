@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Docuverse",
+  name: "DOCUVERSE",
   description: "Talk to your documents!",
   mainNav: [
     {

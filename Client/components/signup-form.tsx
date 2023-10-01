@@ -85,7 +85,7 @@ export default function SignUpForm() {
         className="flex w-[20rem] flex-col space-y-2"
       >
         <div className="mb-5 flex justify-center">
-          <h1 className="text-4xl font-bold text-[#15bebe]">Sign Up</h1>
+          <h1 className="text-primary text-4xl font-bold">Sign Up</h1>
         </div>
         <FormField
           control={form.control}
@@ -96,7 +96,7 @@ export default function SignUpForm() {
                 <Input
                   placeholder="your first name"
                   {...field}
-                  className="border border-black"
+                  className="border-primary border"
                 />
               </FormControl>
               <FormMessage />
@@ -112,7 +112,7 @@ export default function SignUpForm() {
                 <Input
                   placeholder="youremail@xyz.com"
                   {...field}
-                  className="border border-black"
+                  className="border-primary border"
                 />
               </FormControl>
               <FormMessage />
@@ -129,7 +129,7 @@ export default function SignUpForm() {
                   type="password"
                   placeholder="your password"
                   {...field}
-                  className="border border-black"
+                  className="border-primary border"
                 />
               </FormControl>
               <FormMessage />
@@ -146,7 +146,7 @@ export default function SignUpForm() {
                   type="password"
                   placeholder="confirm your password"
                   {...field}
-                  className="border border-black"
+                  className="border-primary border"
                 />
               </FormControl>
               <FormMessage />
