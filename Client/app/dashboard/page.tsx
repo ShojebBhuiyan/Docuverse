@@ -5,7 +5,7 @@ export default function DashboardPage() {
     <section>
       <div className="container flex h-[80vh] items-center justify-around">
         <DashboardButton href="/threads" pageName="Go To Threads" />
-        <DashboardButton href="/flashcards" pageName="Go To Flashcards" />
+        <DashboardButton href="/decks" pageName="Go To Decks" />
       </div>
     </section>
   );
