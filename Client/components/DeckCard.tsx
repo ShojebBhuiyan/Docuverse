@@ -6,9 +6,9 @@ import { Card, CardTitle } from "@/components/ui/card";
 
 const DeckCard = ({ title, id }: PostProps) => {
   return (
-    <Card className="flex border items-center justify-center h-20">
+    <Card className="flex border items-center justify-center w-[250px] h-[200px]">
       <CardTitle>
-        <Link href={`/decks/${id}`}> {title} </Link>
+        <Link href={`/decks/${id}`}> sample deck </Link>
       </CardTitle>
     </Card>
   );
