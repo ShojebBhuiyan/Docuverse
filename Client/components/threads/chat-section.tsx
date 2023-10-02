@@ -4,12 +4,9 @@ import { useState } from "react";
 
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Textarea } from "../ui/textarea";
+import { useThread } from "./threads-context-provider";
 
-interface ChatSectionProps {
-  threadId: number;
-}
-
-export default function ChatSection({ threadId }: ChatSectionProps) {
+export default function ChatSection() {
   const [messages, setMessages] = useState<
     | {
         content: string;
@@ -22,6 +19,8 @@ export default function ChatSection({ threadId }: ChatSectionProps) {
       role: "system",
     },
   ]);
+
+  const context = useThread();
 
   const [input, setInput] = useState("");
   return (
@@ -76,7 +75,7 @@ export default function ChatSection({ threadId }: ChatSectionProps) {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  threadId: threadId,
+                  threadId: context?.threadId,
                   message: input,
                 }),
               }

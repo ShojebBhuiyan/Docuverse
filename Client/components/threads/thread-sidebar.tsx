@@ -7,16 +7,10 @@ import { Pen } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
+import ThreadButtton from "./thread-button";
+import { useThread } from "./threads-context-provider";
 
-export interface ThreadSidebarProps {
-  thread: number;
-  setThread: React.Dispatch<React.SetStateAction<number>>;
-}
-
-export default function ThreadSidebar({
-  thread,
-  setThread,
-}: ThreadSidebarProps) {
+export default function ThreadSidebar() {
   const [threads, setThreads] = useState<
     { title: string; id: number }[] | null
   >();
@@ -24,6 +18,8 @@ export default function ThreadSidebar({
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState("");
+
+  const context = useThread();
 
   useEffect(() => {
     const fetchThreads = async () => {
@@ -46,59 +42,11 @@ export default function ThreadSidebar({
         <Skeleton className="h-screen" />
       ) : (
         threads?.map((thread) => (
-          <div className="flex items-center justify-center gap-1">
-            {isEditing ? (
-              <Input
-                type="text"
-                className="border-0"
-                value={newName.length === 0 ? thread.title : newName}
-                onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    const res = await fetch(
-                      "http://localhost:8080/api/v1/thread/update-title",
-                      {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                          Authorization:
-                            "Bearer " + localStorage.getItem("auth-token"),
-                        },
-                        body: JSON.stringify({
-                          id: thread.id,
-                          title: newName,
-                        }),
-                      }
-                    );
-
-                    const data = await res.json();
-                    setThreads(data);
-                    setIsEditing(false);
-                    setNewName("");
-                  }
-                }}
-              />
-            ) : (
-              <Button
-                variant={"secondary"}
-                className="rounded-0 hover:text-primary"
-                onClick={() => {
-                  setThread(thread.id);
-                }}
-              >
-                {thread.title}
-              </Button>
-            )}
-
-            <Button
-              variant={"ghost"}
-              className="h-fit w-fit"
-              onClick={() => setIsEditing(true)}
-            >
-              <Pen size={16} className="hover:text-primary" />
-            </Button>
-            {/* <div className="border-primary container mt-10 border-t"></div> */}
-          </div>
+          <ThreadButtton
+            threadId={thread.id}
+            threadTitle={thread.title}
+            setThreads={setThreads}
+          />
         ))
       )}
       <div>
