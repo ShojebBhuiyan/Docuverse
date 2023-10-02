@@ -7,32 +7,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @Entity
-@Table(name = "FlashCards")
-public class FlashCard {
+@Table(name = "Deck")
+public class Deck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+    @Column(name = "deckId")
+    private long deckId;
     @Column(name = "title")
     private String title;
 
-    @Column(name = "question")
-    private String question;
-
-    @Column(name = "answer")
-    private String answer;
-
-    @Column(name = "weight") // New field for weight
-    private int weight = 3; // Set weight to 3 upon generation
-
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "deckId")
-    private Deck deck;
-
+    @JoinColumn(name = "userId")
+    private User user;
 }
